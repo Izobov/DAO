@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 import "./IERC20.sol";
 
@@ -74,22 +74,18 @@ contract ERC20 is IERC20 {
         _;
     }
 
-    constructor(
-        string memory _n,
-        string memory _s,
-        uint initialSupply
-    ) {
+    constructor(string memory _n, string memory _s, uint initialSupply) {
         _name = _n;
         _symbol = _s;
         owner = msg.sender;
-        mint(initialSupply, msg.sender);
+        mint(initialSupply, owner);
     }
 
-    function mint(uint amount, address shop) public onlyOwner {
-        _beforeTokenTransfer(address(0), shop, amount);
-        balances[shop] = amount;
+    function mint(uint amount, address _to) public onlyOwner {
+        _beforeTokenTransfer(address(0), _to, amount);
+        balances[_to] = amount;
         totalTokens += amount;
-        emit Transfer(address(0), shop, amount);
+        emit Transfer(address(0), _to, amount);
     }
 
     function burn(address _from, uint amount) public onlyOwner {
